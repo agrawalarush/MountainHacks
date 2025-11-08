@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fast Food Spending Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #fafafa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333;
+    }
+
+    h1 {
+      margin-top: 20px;
+      color: #e67e22;
+    }
+
+    .container {
+      background: #fff;
+      padding: 20px 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 90%;
+      margin-top: 20px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    input, textarea, button {
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #e67e22;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #d35400;
+    }
+
+    h2 {
+      margin-top: 30px;
+      border-bottom: 2px solid #e67e22;
+      padding-bottom: 5px;
+    }
+
+    .log {
+      margin-top: 10px;
+    }
+
+    .entry {
+      background: #f7f7f7;
+      border-radius: 8px;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      border-left: 5px solid #e67e22;
+    }
+
+    .entry strong {
+      display: block;
+      color: #2c3e50;
+    }
+
+    .total {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      color: #27ae60;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🍟 Fast Food Spending Tracker</h1>
+  <div class="container">
+    <form id="spendingForm">
+      <input type="text" id="restaurant" placeholder="Restaurant Name" required />
+      <input type="number" id="amount" placeholder="Amount Spent ($)" min="0" step="0.01" required />
+      <input type="date" id="date" required />
+      <textarea id="description" placeholder="What did you buy?" rows="2"></textarea>
+      <button type="submit">Add Entry</button>
+    </form>
+
+    <h2>Spending Log</h2>
+    <div id="log" class="log"></div>
+    <div class="total" id="total">Total Spent: $0.00</div>
+  </div>
+
+  <script>
+    const form = document.getElementById('spendingForm');
+    const logDiv = document.getElementById('log');
+    const totalDisplay = document.getElementById('total');
+
+    let totalSpent = 0;
+    let entries = [];
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const restaurant = document.getElementById('restaurant').value.trim();
+      const amount = parseFloat(document.getElementById('amount').value);
+      const date = document.getElementById('date').value;
+      const description = document.getElementById('description').value.trim();
+
+      if (!restaurant || isNaN(amount) || !date) {
+        alert("Please fill in all required fields!");
+        return;
+      }
+
+      const entry = { restaurant, amount, date, description };
+      entries.push(entry);
+      totalSpent += amount;
+
+      updateLog();
+      form.reset();
+    });
+
+    function updateLog() {
+      logDiv.innerHTML = '';
+      entries.forEach((entry, index) => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        div.innerHTML = `
+          <strong>${entry.restaurant}</strong>
+          <em>${entry.date}</em><br>
+          $${entry.amount.toFixed(2)} - ${entry.description || "No description"}
+        `;
+        logDiv.appendChild(div);
+      });
+
+      totalDisplay.textContent = `Total Spent: $${totalSpent.toFixed(2)}`;
+    }
+  </script>
+</body>
+</html>

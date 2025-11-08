@@ -1,0 +1,1 @@
+print("tu mama es muy caliente")
